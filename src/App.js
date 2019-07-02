@@ -22,7 +22,7 @@ class App extends Component {
 
     this.setState(prevState => {
       const newState = { ...prevState };
-      return newState.tasks.push({ name: this.state.value, done: 'false' });
+      return newState.tasks.push({ name: this.state.value, done: false });
     });
   }
 
