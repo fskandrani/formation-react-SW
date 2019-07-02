@@ -3,9 +3,9 @@ import TodoItem from './TodoItem';
 import './App.css';
 
 const tasks = [
-  { name: 'Learn React', done: false },
-  { name: 'Learn CSS', done: true },
-  { name: 'Web development', done: true }
+  { id: 0, name: 'Learn React', done: false },
+  { id: 1, name: 'Learn CSS', done: true },
+  { id: 2, name: 'Web development', done: true }
 ];
 
 class App extends Component {
@@ -15,6 +15,7 @@ class App extends Component {
 
     this.clickHandler = this.clickHandler.bind(this);
     this.onChangeHandler = this.onChangeHandler.bind(this);
+    this.changeCheckedHandler = this.changeCheckedHandler.bind(this);
   }
 
   clickHandler() {
@@ -22,7 +23,16 @@ class App extends Component {
 
     this.setState(prevState => {
       const newState = { ...prevState };
-      return newState.tasks.push({ name: this.state.value, done: false });
+      return newState.tasks.push({ id: newState.tasks.length, name: this.state.value, done: false });
+    });
+  }
+
+  changeCheckedHandler(id) {
+    console.log('id : ', id);
+    console.log('this.state ', this.state);
+    this.setState(prevState => {
+      const newState = { ...prevState };
+      return (newState.tasks[id].done = !this.state.tasks[id].done);
     });
   }
 
@@ -39,12 +49,18 @@ class App extends Component {
     return (
       <div>
         {tasks.map(task => {
-          return <TodoItem key={task.name} done={task.done} name={task.name} />;
+          return (
+            <TodoItem
+              key={task.name}
+              id={task.id}
+              done={task.done}
+              name={task.name}
+              changeCheckedHandler={this.changeCheckedHandler}
+            />
+          );
         })}
-        <form onSubmit={this.clickHandler}>
-          <input type="text" id="name" name="name" onChange={this.onChangeHandler} value={this.state.value} />
-          <input type="submit" value="Add" />
-        </form>
+        <button onClick={this.clickHandler}> Add</button>
+        <input type="text" id="name" name="name" onChange={this.onChangeHandler} value={this.state.value} />
       </div>
     );
   }
