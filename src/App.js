@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TodoItem from './TodoItem';
 import './App.css';
+import { toggleCheck } from './actions/todo';
+import { connect } from 'react-redux';
 
 const tasks = [
   { id: 0, name: 'Learn React', done: false },
@@ -28,8 +30,7 @@ class App extends Component {
   }
 
   changeCheckedHandler(id) {
-    console.log('id : ', id);
-    console.log('this.state ', this.state);
+    this.props.toggleCheck(id);
     this.setState(prevState => {
       const newState = { ...prevState };
       return (newState.tasks[id].done = !this.state.tasks[id].done);
@@ -48,7 +49,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        {tasks.map(task => {
+        {this.props.todo.tasks.map(task => {
           return (
             <TodoItem
               key={task.name}
@@ -60,10 +61,24 @@ class App extends Component {
           );
         })}
         <button onClick={this.clickHandler}> Add</button>
-        <input type="text" id="name" name="name" onChange={this.onChangeHandler} value={this.state.value} />
+        <input type='text' id='name' name='name' onChange={this.onChangeHandler} value={this.state.value} />
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    todo: state.todo
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleCheck: checkedId => dispatch(toggleCheck(checkedId))
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
